@@ -23,7 +23,7 @@ import (
 	avro "github.com/elodina/go-avro"
 )
 
-const magic_bytes = []byte{0}
+var magic_bytes = []byte{0}
 
 type KafkaAvroAuth struct {
 	User string
