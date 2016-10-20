@@ -23,10 +23,15 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	avro "github.com/elodina/go-avro"
 	"sync"
 )
+
+var gClient = &http.Client{
+	Timeout: time.Second * 10,
+}
 
 const (
 	GET_SCHEMA_BY_ID             = "/schemas/ids/%d"
@@ -146,7 +151,7 @@ func (this *CachedSchemaRegistryClient) Register(subject string, schema avro.Sch
 	request, err := this.newDefaultRequest("POST",
 		fmt.Sprintf(REGISTER_NEW_SCHEMA, subject),
 		strings.NewReader(fmt.Sprintf("{\"schema\": %s}", strconv.Quote(schema.String()))))
-	response, err := http.DefaultClient.Do(request)
+	response, err := gClient.Do(request)
 	if err != nil {
 		return 0, err
 	}
